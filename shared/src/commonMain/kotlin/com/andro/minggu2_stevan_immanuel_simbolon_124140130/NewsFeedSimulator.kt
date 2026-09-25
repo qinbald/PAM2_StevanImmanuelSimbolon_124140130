@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -29,11 +30,14 @@ class NewsFeedSimulator {
         }
     }
 
-    // 2 & 3. Filter dan Transform
+    // 2 & 3. Filter dan Transform + Bonus: Error Handling dengan .catch
+    // .catch menangkap exception dari upstream flow (filter/map) tanpa mematikan stream,
+    // lalu memancarkan (emit) fallback DisplayNews bertanda [Error]
     fun getFilteredAndTransformedNews(category: String): Flow<DisplayNews> {
         return newsFlow
             .filter { it.category == category || category == "All" }
             .map { DisplayNews(it.id, "[${it.category}] ${it.title}") }
+            .catch { e -> emit(DisplayNews(-1, "[Error] Gagal memuat berita: ${e.message}")) }
     }
 
     // 4. Update StateFlow
@@ -41,12 +45,19 @@ class NewsFeedSimulator {
         _readCount.value++
     }
 
-    // 5. Async fetch detail
-    suspend fun fetchNewsDetailAsync(newsId: Int): String = coroutineScope {
-        val deferred = async {
-            delay(1000) // simulasi network
-            "Detail lengkap untuk berita $newsId. Diambil secara async."
+    // 5. Async fetch detail + Bonus: Exception Handling dengan try-catch
+    // Menggunakan coroutineScope + async/await untuk fetch concurrent.
+    // try-catch mengamankan coroutine bila terjadi network failure atau ID invalid (newsId < 0)
+    suspend fun fetchNewsDetailAsync(newsId: Int): String = try {
+        coroutineScope {
+            val deferred = async {
+                delay(1000) // simulasi network
+                if (newsId < 0) throw IllegalArgumentException("ID tidak valid")
+                "Detail lengkap untuk berita $newsId. Diambil secara async."
+            }
+            deferred.await()
         }
-        deferred.await()
+    } catch (e: Exception) {
+        "Error mengambil detail: ${e.message}"
     }
 }
