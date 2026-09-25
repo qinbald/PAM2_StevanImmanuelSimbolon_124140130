@@ -27,7 +27,7 @@ Gunakan run configurations di IDE (Android Studio / IntelliJ IDEA) atau jalankan
 **Lampiran hasil run :**
 
 *1. Android :*
-![Tampilan Android](screenshot/android.jpeg)
+<img src="screenshot/android.png" width="300">
 
 *2. Dekstop :*
 ![Tampilan Dekstop](screenshot/dekstop.jpeg)
