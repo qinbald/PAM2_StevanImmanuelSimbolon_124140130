@@ -16,10 +16,10 @@ Gunakan run configurations di IDE (Android Studio / IntelliJ IDEA) atau jalankan
 - **Android** Dengan 2 cara berikut :
   1. Build APK: `./gradlew :androidApp:assembleDebug` (lalu install manual)
   2. Install via USB:
-    1. Aktifkan **Developer Options** di HP Android (Tap Build Number 7x).
-    2. Aktifkan **USB Debugging**.
-    3. Sambungkan HP ke PC via kabel USB.
-    4. Jalankan `./gradlew :androidApp:installDebug` di terminal, atau klik tombol segitiga (run) di Android Studio.
+    - Aktifkan **Developer Options** di HP Android (Tap Build Number 7x).
+    - Aktifkan **USB Debugging**.
+    - Sambungkan HP ke PC via kabel USB.
+    - Jalankan `./gradlew :androidApp:installDebug` di terminal, atau klik tombol segitiga (run) di Android Studio.
 - **Desktop**:
   1. run dari terminal : `./gradlew :desktopApp:run`
   2. run dengan klik segitiga (run) di android studio
